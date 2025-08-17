@@ -1,11 +1,15 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AuthService } from '@/services/api';
+import PhoneInput from '@/components/forms/PhoneInput';
+import { Country } from 'react-native-country-picker-modal';
+import { formatPhoneWithCountryCode } from '@/utils/countryDetection';
 
 export default function PhoneScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCallingCode, setCountryCallingCode] = useState('1');
   const [isLoading, setIsLoading] = useState(false);
   
   const { clearAuthState } = useAuth();
@@ -13,6 +17,10 @@ export default function PhoneScreen() {
   // Clear any existing auth state when entering this screen
   const handleClearAuth = () => {
     clearAuthState();
+  };
+
+  const handleCountryChange = (country: Country) => {
+    setCountryCallingCode(country.callingCode[0] || '1');
   };
 
   const handleSubmit = async () => {
@@ -26,13 +34,8 @@ export default function PhoneScreen() {
     setIsLoading(true);
 
     try {
-      // Add country code if not present
-      let formattedPhone = trimmedPhone;
-      if (!formattedPhone.startsWith('+')) {
-        // Default to US country code if no country code is provided
-        // TODO: Implement country detection for Scenario 1
-        formattedPhone = '+1' + formattedPhone.replace(/\D/g, '');
-      }
+      // Format phone number with country code
+      const formattedPhone = formatPhoneWithCountryCode(trimmedPhone, countryCallingCode);
       
       const otpData = {
         phoneNumber: formattedPhone,
@@ -79,16 +82,15 @@ export default function PhoneScreen() {
           Enter your phone number to get started
         </Text>
 
-        {/* Phone Input Field */}
-        <TextInput
-          style={styles.input}
-          placeholder="Enter phone number"
+        {/* Phone Input with Country Selector */}
+        <PhoneInput
           value={phoneNumber}
           onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-          autoCapitalize="none"
-          autoComplete="tel"
+          onCountryChange={handleCountryChange}
+          autoDetectCountry={true}
           editable={!isLoading}
+          label="Phone Number"
+          required={true}
         />
 
         {/* Submit Button */}
@@ -101,7 +103,6 @@ export default function PhoneScreen() {
             {isLoading ? 'Sending...' : 'Send Verification Code'}
           </Text>
         </Pressable>
-
 
         {/* Debug Helper */}
         <Pressable style={styles.debugButton} onPress={handleClearAuth}>
@@ -135,15 +136,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     color: '#666',
     lineHeight: 24,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 16,
-    fontSize: 16,
-    marginBottom: 24,
-    backgroundColor: '#fff',
   },
   button: {
     backgroundColor: '#007AFF',
