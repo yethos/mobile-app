@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
   selector: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 12,
     backgroundColor: '#fff',
-    minHeight: 56,
+    minHeight: 48,
   },
   selectorDisabled: {
     backgroundColor: '#f5f5f5',
@@ -138,15 +138,17 @@ const styles = StyleSheet.create({
   callingCode: {
     fontSize: 16,
     color: '#000',
-    marginLeft: 8,
+    marginLeft: 4,
+    fontWeight: '500',
   },
   textDisabled: {
     color: '#999',
   },
   arrow: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 10,
+    color: '#999',
     marginLeft: 'auto',
+    marginRight: 4,
   },
   errorText: {
     fontSize: 12,

@@ -133,15 +133,16 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 32,
+    marginBottom: 40,
     color: '#666',
-    lineHeight: 24,
+    lineHeight: 22,
   },
   button: {
     backgroundColor: '#007AFF',
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
+    marginTop: 24,
     marginBottom: 16,
   },
   buttonDisabled: {
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
   },
   debugButton: {

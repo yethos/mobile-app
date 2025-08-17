@@ -142,20 +142,21 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#000',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   required: {
     color: '#FF3B30',
   },
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    gap: 8,
   },
   countrySelector: {
-    marginRight: 8,
-    minWidth: 120,
+    minWidth: 100,
+    maxWidth: 120,
   },
   phoneInputWrapper: {
     flex: 1,
@@ -164,12 +165,12 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 12,
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 14,
     fontSize: 16,
     backgroundColor: '#fff',
-    minHeight: 56,
+    minHeight: 48,
   },
   phoneInputError: {
     borderColor: '#FF3B30',
