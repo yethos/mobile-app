@@ -18,13 +18,6 @@ export default function AuthLayout() {
         }} 
       />
       <Stack.Screen 
-        name="register" 
-        options={{ 
-          title: 'Phone Registration',
-          presentation: 'card',
-        }} 
-      />
-      <Stack.Screen 
         name="otp" 
         options={{ 
           title: 'Verify Code',

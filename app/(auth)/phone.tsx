@@ -60,34 +60,8 @@ export default function PhoneScreen() {
       } catch (error: any) {
         console.error('OTP request error:', error);
         
-        // Check if error is due to user not found
-        if (error.message && (error.message.includes('not found') || error.message.includes('does not exist') || error.code === 'USER_NOT_FOUND')) {
-          // User doesn't exist, show message and suggest registration
-          console.log('User not found');
-          
-          Alert.alert(
-            'Account Not Found',
-            'No account found with this phone number. Please create an account first.',
-            [
-              {
-                text: 'Cancel',
-                style: 'cancel',
-              },
-              {
-                text: 'Create Account',
-                onPress: () => {
-                  const queryParams = new URLSearchParams({
-                    phone: formattedPhone,
-                  }).toString();
-                  (router.push as any)(`/(auth)/register?${queryParams}`);
-                },
-              },
-            ]
-          );
-        } else {
-          // Other error
-          Alert.alert('Error', error.message || 'Failed to send verification code. Please try again.');
-        }
+        // Show error message
+        Alert.alert('Error', error.message || 'Failed to send verification code. Please try again.');
       }
     } catch (error: any) {
       console.error('Unexpected error:', error);
@@ -128,21 +102,6 @@ export default function PhoneScreen() {
           </Text>
         </Pressable>
 
-        {/* Sign Up Link */}
-        <View style={styles.signUpContainer}>
-          <Text style={styles.signUpText}>New to Yethos? </Text>
-          <Pressable
-            onPress={() => {
-              const queryParams = new URLSearchParams({
-                phone: phoneNumber,
-              }).toString();
-              (router.push as any)(`/(auth)/register?${queryParams}`);
-            }}
-            disabled={isLoading}
-          >
-            <Text style={styles.signUpLink}>Create Account</Text>
-          </Pressable>
-        </View>
 
         {/* Debug Helper */}
         <Pressable style={styles.debugButton} onPress={handleClearAuth}>
@@ -208,20 +167,5 @@ const styles = StyleSheet.create({
   debugText: {
     color: '#999',
     fontSize: 12,
-  },
-  signUpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  signUpText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  signUpLink: {
-    fontSize: 14,
-    color: '#007AFF',
-    fontWeight: '600',
   },
 });
