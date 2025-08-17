@@ -45,8 +45,24 @@ export default function PhoneInput({
   }, [autoDetectCountry, isDetectingCountry]);
 
   const handleCountryChange = (country: Country) => {
+    const newCallingCode = country.callingCode[0] || '1';
+    
+    // Clean the current phone number to remove ANY calling code
+    let cleanedPhone = value.replace(/\D/g, '');
+    
+    // Remove any calling code from the beginning (current or new)
+    if (cleanedPhone.startsWith(callingCode)) {
+      cleanedPhone = cleanedPhone.substring(callingCode.length);
+    } else if (cleanedPhone.startsWith(newCallingCode)) {
+      cleanedPhone = cleanedPhone.substring(newCallingCode.length);
+    }
+    
+    // Update state with new country and calling code
     setCountryCode(country.cca2);
-    setCallingCode(country.callingCode[0] || '1');
+    setCallingCode(newCallingCode);
+    
+    // Update the phone number with just the local number
+    onChangeText(cleanedPhone);
     
     if (onCountryChange) {
       onCountryChange(country);
@@ -54,13 +70,8 @@ export default function PhoneInput({
   };
 
   const handlePhoneChange = (text: string) => {
-    // Remove any non-digit characters except + at the beginning
-    let cleanedText = text.replace(/[^\d+]/g, '');
-    
-    // If the text starts with +, remove it for now
-    if (cleanedText.startsWith('+')) {
-      cleanedText = cleanedText.substring(1);
-    }
+    // Remove any non-digit characters
+    let cleanedText = text.replace(/\D/g, '');
     
     // If the text starts with the calling code, remove it
     if (cleanedText.startsWith(callingCode)) {
@@ -90,36 +101,37 @@ export default function PhoneInput({
         </Text>
       )}
       
-      <View style={styles.inputContainer}>
-        <View style={styles.countrySelector}>
-          <CountrySelector
-            selectedCountryCode={countryCode}
-            onCountryChange={handleCountryChange}
-            disabled={!editable}
-            error={error}
-            showCallingCode={true}
-          />
-        </View>
+      <View style={[styles.inputContainer, error && styles.inputContainerError]}>
+        <CountrySelector
+          selectedCountryCode={countryCode}
+          onCountryChange={handleCountryChange}
+          disabled={!editable}
+          error={false}
+          showCallingCode={false}
+          withFlag={true}
+          withCountryNameButton={false}
+          withCallingCodeButton={true}
+          noBorder={true}
+        />
         
-        <View style={styles.phoneInputWrapper}>
-          <TextInput
-            {...textInputProps}
-            style={[
-              styles.phoneInput,
-              error && styles.phoneInputError,
-              !editable && styles.phoneInputDisabled,
-            ]}
-            value={value}
-            onChangeText={handlePhoneChange}
-            placeholder="Phone number"
-            keyboardType="phone-pad"
-            autoComplete="tel"
-            autoCapitalize="none"
-            editable={editable}
-            accessibilityLabel={`${label} input field`}
-            accessibilityHint={`Enter your phone number without country code`}
-          />
-        </View>
+        <View style={styles.divider} />
+        
+        <TextInput
+          {...textInputProps}
+          style={[
+            styles.phoneInput,
+            !editable && styles.phoneInputDisabled,
+          ]}
+          value={value}
+          onChangeText={handlePhoneChange}
+          placeholder="Phone number"
+          keyboardType="phone-pad"
+          autoComplete="tel"
+          autoCapitalize="none"
+          editable={editable}
+          accessibilityLabel={`${label} input field`}
+          accessibilityHint={`Enter your phone number without country code`}
+        />
       </View>
       
       {errorMessage && error && (
@@ -151,29 +163,27 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: 8,
-  },
-  countrySelector: {
-    minWidth: 100,
-    maxWidth: 120,
-  },
-  phoneInputWrapper: {
-    flex: 1,
-  },
-  phoneInput: {
-    flex: 1,
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 12,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+  },
+  inputContainerError: {
+    borderColor: '#FF3B30',
+  },
+  divider: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#e0e0e0',
+  },
+  phoneInput: {
+    flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    backgroundColor: '#fff',
     minHeight: 48,
-  },
-  phoneInputError: {
-    borderColor: '#FF3B30',
   },
   phoneInputDisabled: {
     backgroundColor: '#f5f5f5',

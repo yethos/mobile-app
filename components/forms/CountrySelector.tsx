@@ -22,6 +22,7 @@ export interface CountrySelectorProps {
   withCountryNameButton?: boolean;
   withCallingCodeButton?: boolean;
   withCloseButton?: boolean;
+  noBorder?: boolean;
 }
 
 export default function CountrySelector({
@@ -38,6 +39,7 @@ export default function CountrySelector({
   withCountryNameButton = false,
   withCallingCodeButton = true,
   withCloseButton = true,
+  noBorder = false,
 }: CountrySelectorProps) {
   const [countryCode, setCountryCode] = useState<CountryCode>(selectedCountryCode);
   const [visible, setVisible] = useState(false);
@@ -66,6 +68,7 @@ export default function CountrySelector({
       <Pressable
         style={[
           styles.selector,
+          noBorder && styles.selectorNoBorder,
           disabled && styles.selectorDisabled,
           error && styles.selectorError,
         ]}
@@ -115,7 +118,7 @@ export default function CountrySelector({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 8,
+    marginVertical: 0,
   },
   selector: {
     flexDirection: 'row',
@@ -127,6 +130,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#fff',
     minHeight: 48,
+  },
+  selectorNoBorder: {
+    borderWidth: 0,
+    paddingHorizontal: 16,
+    borderRadius: 0,
   },
   selectorDisabled: {
     backgroundColor: '#f5f5f5',
@@ -147,8 +155,8 @@ const styles = StyleSheet.create({
   arrow: {
     fontSize: 10,
     color: '#999',
-    marginLeft: 'auto',
-    marginRight: 4,
+    marginLeft: 8,
+    marginRight: 0,
   },
   errorText: {
     fontSize: 12,
